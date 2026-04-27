@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>Update game text</h2>
+  <textarea id="txt" rows="4" cols="40"></textarea><br><br>
+  <button onclick="save()">Save</button>
+  <p id="status"></p>
+
+  <script>
+    const API = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+    // Load current value on open
+    fetch(API)
+      .then(r => r.text())
+      .then(t => document.getElementById("txt").value = t);
+
+    function save() {
+      const val = document.getElementById("txt").value;
+      const body = new FormData();
+      body.append("value", val);
+      fetch(API, { method: "POST", body })
+        .then(() => document.getElementById("status").textContent = "Saved!");
+    }
+  </script>
+</body>
+</html>
