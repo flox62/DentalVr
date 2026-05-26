@@ -13,13 +13,15 @@
       --bg: #0f0f0f;
       --surface: #1a1a1a;
       --surface2: #242424;
+      --surface3: #2e2e2e;
       --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
       --text: #f0f0f0;
       --muted: #888;
       --on: #4ade80;
-      --on-bg: rgba(74, 222, 128, 0.12);
-      --off: #888;
-      --off-bg: rgba(136,136,136,0.1);
+      --on-bg: rgba(74,222,128,0.12);
+      --red: #f87171;
+      --red-bg: rgba(248,113,113,0.12);
       --accent: #4ade80;
     }
 
@@ -31,253 +33,262 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0 0 2rem;
+      padding: 0 0 3rem;
     }
 
+    /* ── HEADER ── */
     header {
       width: 100%;
       padding: 3rem 1.5rem 1.5rem;
       text-align: center;
+      position: relative;
     }
-
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    header p {
-      margin-top: 0.4rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
+    header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+    header p  { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); }
 
     .dot {
-      display: inline-block;
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-right: 6px;
-      vertical-align: middle;
+      display: inline-block; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--accent);
+      margin-right: 6px; vertical-align: middle;
       animation: pulse 2s infinite;
     }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    /* admin gear button */
+    .admin-btn {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      background: none; border: none; color: var(--muted);
+      font-size: 1.3rem; cursor: pointer; padding: 6px;
+      border-radius: 8px; transition: color 0.2s, background 0.2s;
+      line-height: 1;
     }
+    .admin-btn:hover { color: var(--text); background: var(--surface2); }
+    .admin-btn.active { color: var(--on); }
 
-    .cards {
+    /* ── ENVIRONMENT SELECTOR ── */
+    .env-wrap {
+      width: 100%; max-width: 420px;
+      padding: 0 1.25rem 1.25rem;
+    }
+    .env-label {
+      font-size: 0.75rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .env-select-wrap {
+      position: relative;
+    }
+    .env-select-wrap::after {
+      content: '▾';
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+      font-size: 0.85rem;
+    }
+    select#env-select {
       width: 100%;
-      max-width: 420px;
-      padding: 0 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.75rem 2.5rem 0.75rem 1rem;
+      appearance: none;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
     }
+    select#env-select:focus { border-color: rgba(74,222,128,0.4); }
+    select#env-select option { background: #1a1a1a; }
 
+    /* ── CARDS ── */
+    .cards {
+      width: 100%; max-width: 420px;
+      padding: 0 1.25rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
       transition: border-color 0.2s;
     }
-
-    .card.active {
-      border-color: rgba(74, 222, 128, 0.3);
-    }
-
+    .card.active { border-color: rgba(74,222,128,0.3); }
     .card-info { flex: 1; min-width: 0; }
-
-    .card-label {
-      font-size: 1rem;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-status {
-      margin-top: 3px;
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--muted);
-      transition: color 0.2s;
-    }
-
+    .card-label { font-size: 1rem; font-weight: 500; }
+    .card-status { margin-top: 3px; font-size: 0.78rem; font-weight: 500; color: var(--muted); transition: color 0.2s; }
     .card.active .card-status { color: var(--on); }
 
-    /* Toggle switch */
-    .toggle {
-      position: relative;
-      width: 52px;
-      height: 30px;
-      flex-shrink: 0;
-    }
-
+    /* toggle */
+    .toggle { position: relative; width: 52px; height: 30px; flex-shrink: 0; }
     .toggle input { display: none; }
-
     .track {
-      position: absolute;
-      inset: 0;
-      border-radius: 999px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: background 0.25s, border-color 0.25s;
+      position: absolute; inset: 0; border-radius: 999px;
+      background: var(--surface2); border: 1px solid var(--border);
+      cursor: pointer; transition: background 0.25s, border-color 0.25s;
     }
-
     .thumb {
-      position: absolute;
-      top: 4px; left: 4px;
-      width: 20px; height: 20px;
-      border-radius: 50%;
+      position: absolute; top: 4px; left: 4px;
+      width: 20px; height: 20px; border-radius: 50%;
       background: var(--muted);
       transition: transform 0.25s, background 0.25s;
       pointer-events: none;
     }
-
-    .toggle input:checked ~ .track {
-      background: var(--on-bg);
-      border-color: var(--on);
-    }
-
-    .toggle input:checked ~ .track .thumb {
-      transform: translateX(22px);
-      background: var(--on);
-    }
-
+    .toggle input:checked ~ .track { background: var(--on-bg); border-color: var(--on); }
+    .toggle input:checked ~ .track .thumb { transform: translateX(22px); background: var(--on); }
     .toggle.loading .track { opacity: 0.5; pointer-events: none; }
-
-    /* spinner on thumb */
     .toggle.loading .thumb::after {
-      content: '';
-      position: absolute;
-      inset: 2px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      border-top-color: var(--text);
+      content: ''; position: absolute; inset: 2px; border-radius: 50%;
+      border: 2px solid transparent; border-top-color: var(--text);
       animation: spin 0.6s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Config section */
-    .config-wrap {
-      width: 100%;
-      max-width: 420px;
-      padding: 2rem 1.25rem 0;
+    /* ── ADMIN PANEL ── */
+    .admin-panel {
+      width: 100%; max-width: 420px;
+      padding: 1.5rem 1.25rem 0;
+      display: none;
     }
+    .admin-panel.open { display: block; }
 
-    details {
+    .admin-card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      border: 1px solid var(--border2);
+      border-radius: 16px;
       overflow: hidden;
     }
 
-    summary {
-      padding: 1rem 1.25rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    summary::before { content: '⚙'; }
-
-    details[open] summary { border-bottom: 1px solid var(--border); }
-
-    .config-body {
-      padding: 1rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .config-body label {
+    .admin-header {
+      padding: 0.9rem 1.25rem;
       font-size: 0.78rem;
+      font-weight: 600;
       color: var(--muted);
-      display: block;
-      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
     }
 
-    .config-body input {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-family: 'DM Sans', monospace;
-      font-size: 0.8rem;
-      padding: 0.55rem 0.75rem;
-      outline: none;
+    /* password gate */
+    .pw-gate {
+      padding: 1.25rem;
+      display: flex; gap: 8px;
     }
+    .pw-gate input {
+      flex: 1; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; padding: 0.55rem 0.75rem; outline: none;
+    }
+    .pw-gate input:focus { border-color: rgba(74,222,128,0.4); }
+    .pw-btn {
+      background: var(--on-bg); color: var(--on);
+      border: 1px solid var(--on); border-radius: 8px;
+      padding: 0.55rem 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500; cursor: pointer;
+      white-space: nowrap;
+    }
+    .pw-btn:active { opacity: 0.7; }
 
-    .config-body input:focus { border-color: rgba(74,222,128,0.5); }
+    /* env list */
+    .env-list { padding: 0.5rem 0; }
+    .env-item {
+      padding: 0.75rem 1.25rem;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .env-item:last-child { border-bottom: none; }
+    .env-item-info { flex: 1; min-width: 0; }
+    .env-item-name { font-size: 0.9rem; font-weight: 500; }
+    .env-item-url {
+      font-size: 0.72rem; color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    .del-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 8px; color: var(--red);
+      width: 30px; height: 30px; font-size: 1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.2s;
+    }
+    .del-btn:hover { background: var(--red-bg); }
 
-    .save-btn {
-      margin-top: 0.25rem;
-      width: 100%;
-      background: var(--on-bg);
-      color: var(--on);
-      border: 1px solid var(--on);
-      border-radius: 8px;
-      padding: 0.6rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
+    /* add new env form */
+    .add-env {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .add-env input {
+      width: 100%; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; padding: 0.55rem 0.75rem; outline: none;
+    }
+    .add-env input:focus { border-color: rgba(74,222,128,0.4); }
+    .add-btn {
+      background: var(--on-bg); color: var(--on);
+      border: 1px solid var(--on); border-radius: 8px;
+      padding: 0.6rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500; cursor: pointer;
       transition: opacity 0.2s;
     }
+    .add-btn:active { opacity: 0.7; }
 
-    .save-btn:active { opacity: 0.7; }
+    .logout-btn {
+      background: none; border: none; color: var(--muted);
+      font-size: 0.78rem; cursor: pointer; padding: 0;
+      text-decoration: underline;
+    }
+    .logout-btn:hover { color: var(--text); }
 
-    /* Toast */
+    /* ── TOAST ── */
     .toast {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
+      position: fixed; bottom: 1.5rem; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      padding: 0.6rem 1.2rem;
-      font-size: 0.83rem;
-      color: var(--text);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 99px; padding: 0.6rem 1.2rem;
+      font-size: 0.83rem; color: var(--text);
       white-space: nowrap;
       transition: transform 0.3s ease, opacity 0.3s;
-      opacity: 0;
-      z-index: 100;
-      pointer-events: none;
+      opacity: 0; z-index: 100; pointer-events: none;
     }
-
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { border-color: rgba(74,222,128,0.4); color: var(--on); }
-    .toast.error { border-color: rgba(239,68,68,0.4); color: #f87171; }
+    .toast.error   { border-color: rgba(248,113,113,0.4); color: var(--red); }
   </style>
 </head>
 <body>
 
 <header>
   <h1><span class="dot"></span>Sheet Controls</h1>
-  <p>Input · B3 &amp; B4</p>
+  <p id="header-sub">Select an environment</p>
+  <button class="admin-btn" id="admin-btn" onclick="toggleAdmin()" title="Admin">⚙</button>
 </header>
 
-<div class="cards" id="cards">
+<!-- Environment selector -->
+<div class="env-wrap">
+  <div class="env-label">Environment</div>
+  <div class="env-select-wrap">
+    <select id="env-select" onchange="onEnvChange()">
+      <option value="">— select —</option>
+    </select>
+  </div>
+</div>
 
+<!-- Toggles -->
+<div class="cards">
   <div class="card" id="card-IsAES">
     <div class="card-info">
       <div class="card-label">IsAES</div>
-      <div class="card-status" id="status-IsAES">Loading…</div>
+      <div class="card-status" id="status-IsAES">—</div>
     </div>
     <label class="toggle" id="toggle-IsAES">
       <input type="checkbox" id="cb-IsAES" onchange="handleToggle('IsAES', this)" />
@@ -288,49 +299,235 @@
   <div class="card" id="card-IsAutoclave">
     <div class="card-info">
       <div class="card-label">IsAutoclave</div>
-      <div class="card-status" id="status-IsAutoclave">Loading…</div>
+      <div class="card-status" id="status-IsAutoclave">—</div>
     </div>
     <label class="toggle" id="toggle-IsAutoclave">
       <input type="checkbox" id="cb-IsAutoclave" onchange="handleToggle('IsAutoclave', this)" />
       <div class="track"><div class="thumb"></div></div>
     </label>
   </div>
-
 </div>
 
-<div class="config-wrap">
-  <details>
-    <summary>Configure Apps Script URL</summary>
-    <div class="config-body">
-      <div>
-        <label>Deployment URL</label>
-        <input type="text" id="input-url" placeholder="https://script.google.com/macros/s/.../exec" />
-      </div>
-      <button class="save-btn" onclick="saveConfig()">Save &amp; Reload</button>
+<!-- Admin panel -->
+<div class="admin-panel" id="admin-panel">
+  <div class="admin-card">
+    <div class="admin-header">
+      <span>Admin</span>
+      <button class="logout-btn" id="logout-btn" onclick="logout()" style="display:none">Log out</button>
     </div>
-  </details>
+
+    <!-- Password gate -->
+    <div class="pw-gate" id="pw-gate">
+      <input type="password" id="pw-input" placeholder="Admin password" onkeydown="if(event.key==='Enter')checkPw()" />
+      <button class="pw-btn" onclick="checkPw()">Unlock</button>
+    </div>
+
+    <!-- Env manager (hidden until unlocked) -->
+    <div id="admin-body" style="display:none">
+      <div class="env-list" id="env-list"></div>
+      <div class="add-env">
+        <input type="text"  id="new-name" placeholder="Name (e.g. Production)" />
+        <input type="text"  id="new-url"  placeholder="https://script.google.com/macros/s/.../exec" />
+        <button class="add-btn" onclick="addEnv()">+ Add environment</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── CONFIG ────────────────────────────────────────────────
-  // Maps each row key → row number in your sheet (B column)
-  const ROW_MAP = { IsAES: 3, IsAutoclave: 4 };
-  const LS_KEY = 'apps_script_url';
+  // ── CONSTANTS ────────────────────────────────────────────
+  const ROW_MAP    = { IsAES: 3, IsAutoclave: 4 };
+  const LS_ENVS    = 'sheet_envs';
+  const LS_SEL     = 'sheet_selected';
+  const ADMIN_PASS = 'CreasupSuperDigitalAC'; // ← change this
 
-  function getUrl() {
-    return localStorage.getItem(LS_KEY) || '';
+  // ── STATE ────────────────────────────────────────────────
+  let adminUnlocked = false;
+  let adminOpen     = false;
+
+  // ── ENVIRONMENTS (localStorage) ──────────────────────────
+  function getEnvs() {
+    try { return JSON.parse(localStorage.getItem(LS_ENVS)) || []; }
+    catch { return []; }
+  }
+  function saveEnvs(envs) { localStorage.setItem(LS_ENVS, JSON.stringify(envs)); }
+  function getSelected()  { return localStorage.getItem(LS_SEL) || ''; }
+  function setSelected(name) { localStorage.setItem(LS_SEL, name); }
+
+  function getActiveUrl() {
+    const sel = getSelected();
+    const env = getEnvs().find(e => e.name === sel);
+    return env ? env.url : '';
   }
 
-  // Pre-fill input on load
-  document.getElementById('input-url').value = getUrl();
+  // ── RENDER DROPDOWN ──────────────────────────────────────
+  function renderDropdown() {
+    const sel   = document.getElementById('env-select');
+    const envs  = getEnvs();
+    const saved = getSelected();
+    sel.innerHTML = '<option value="">— select —</option>';
+    envs.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.name;
+      opt.textContent = e.name;
+      if (e.name === saved) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    const sub = document.getElementById('header-sub');
+    sub.textContent = saved || 'Select an environment';
+  }
 
-  function saveConfig() {
-    const v = document.getElementById('input-url').value.trim();
-    localStorage.setItem(LS_KEY, v);
-    showToast('URL saved', 'success');
+  function onEnvChange() {
+    const name = document.getElementById('env-select').value;
+    setSelected(name);
+    document.getElementById('header-sub').textContent = name || 'Select an environment';
     loadAll();
+  }
+
+  // ── RENDER ADMIN ENV LIST ─────────────────────────────────
+  function renderAdminList() {
+    const list = document.getElementById('env-list');
+    const envs = getEnvs();
+    if (envs.length === 0) {
+      list.innerHTML = '<p style="padding:1rem 1.25rem;font-size:0.83rem;color:var(--muted)">No environments yet.</p>';
+      return;
+    }
+    list.innerHTML = envs.map((e, i) => `
+      <div class="env-item">
+        <div class="env-item-info">
+          <div class="env-item-name">${esc(e.name)}</div>
+          <div class="env-item-url">${esc(e.url)}</div>
+        </div>
+        <button class="del-btn" onclick="deleteEnv(${i})" title="Delete">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function addEnv() {
+    const name = document.getElementById('new-name').value.trim();
+    const url  = document.getElementById('new-url').value.trim();
+    if (!name || !url) { showToast('Fill in name and URL', 'error'); return; }
+    const envs = getEnvs();
+    if (envs.find(e => e.name === name)) { showToast('Name already exists', 'error'); return; }
+    envs.push({ name, url });
+    saveEnvs(envs);
+    document.getElementById('new-name').value = '';
+    document.getElementById('new-url').value  = '';
+    renderDropdown();
+    renderAdminList();
+    showToast(`"${name}" added`, 'success');
+  }
+
+  function deleteEnv(i) {
+    const envs = getEnvs();
+    const removed = envs.splice(i, 1)[0];
+    saveEnvs(envs);
+    if (getSelected() === removed.name) {
+      setSelected('');
+      document.getElementById('header-sub').textContent = 'Select an environment';
+    }
+    renderDropdown();
+    renderAdminList();
+    showToast(`"${removed.name}" removed`, 'success');
+  }
+
+  // ── ADMIN PANEL ───────────────────────────────────────────
+  function toggleAdmin() {
+    adminOpen = !adminOpen;
+    document.getElementById('admin-panel').classList.toggle('open', adminOpen);
+    document.getElementById('admin-btn').classList.toggle('active', adminOpen);
+    if (!adminOpen) { adminUnlocked = false; showAdminBody(false); }
+  }
+
+  function checkPw() {
+    const val = document.getElementById('pw-input').value;
+    if (val === ADMIN_PASS) {
+      adminUnlocked = true;
+      showAdminBody(true);
+      document.getElementById('pw-input').value = '';
+    } else {
+      showToast('Wrong password', 'error');
+      document.getElementById('pw-input').value = '';
+    }
+  }
+
+  function showAdminBody(show) {
+    document.getElementById('pw-gate').style.display   = show ? 'none'  : 'flex';
+    document.getElementById('admin-body').style.display = show ? 'block' : 'none';
+    document.getElementById('logout-btn').style.display = show ? 'inline' : 'none';
+    if (show) renderAdminList();
+  }
+
+  function logout() {
+    adminUnlocked = false;
+    showAdminBody(false);
+  }
+
+  // ── SHEET READ / WRITE ────────────────────────────────────
+  async function readRow(row) {
+    const url = getActiveUrl();
+    if (!url) return null;
+    const res  = await fetch(`${url}?row=${row}&col=2`);
+    const text = (await res.text()).trim().toUpperCase();
+    return text === 'TRUE';
+  }
+
+  async function writeRow(row, value) {
+    const url = getActiveUrl();
+    await fetch(url, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `row=${row}&col=2&value=${value}`
+    });
+  }
+
+  async function loadAll() {
+    if (!getActiveUrl()) {
+      ['IsAES','IsAutoclave'].forEach(k => {
+        document.getElementById('status-' + k).textContent = 'Select environment ↑';
+        document.getElementById('card-' + k).classList.remove('active');
+      });
+      return;
+    }
+    for (const [key, row] of Object.entries(ROW_MAP)) {
+      document.getElementById('status-' + key).textContent = 'Loading…';
+      try {
+        const val = await readRow(row);
+        setUI(key, val);
+      } catch {
+        document.getElementById('status-' + key).textContent = 'Error';
+      }
+    }
+  }
+
+  function setUI(key, val) {
+    document.getElementById('cb-'     + key).checked = val;
+    document.getElementById('card-'   + key).classList.toggle('active', val);
+    document.getElementById('status-' + key).textContent = val ? 'Active' : 'Inactive';
+  }
+
+  async function handleToggle(key, cb) {
+    const toggle = document.getElementById('toggle-' + key);
+    const newVal = cb.checked;
+    toggle.classList.add('loading');
+    cb.disabled = true;
+    try {
+      await writeRow(ROW_MAP[key], newVal);
+      setUI(key, newVal);
+      showToast(`${key} → ${newVal ? 'TRUE' : 'FALSE'}`, 'success');
+    } catch {
+      cb.checked = !newVal;
+      showToast('Write failed', 'error');
+    } finally {
+      toggle.classList.remove('loading');
+      cb.disabled = false;
+    }
   }
 
   // ── TOAST ─────────────────────────────────────────────────
@@ -343,76 +540,8 @@
     toastTimer = setTimeout(() => { el.className = 'toast'; }, 2200);
   }
 
-  // ── READ from sheet ───────────────────────────────────────
-  async function readRow(row) {
-    const url = getUrl();
-    if (!url) return null;
-    const res = await fetch(`${url}?row=${row}&col=2`);
-    const text = (await res.text()).trim().toUpperCase();
-    return text === 'TRUE';
-  }
-
-  async function loadAll() {
-    if (!getUrl()) {
-      ['IsAES','IsAutoclave'].forEach(k => {
-        document.getElementById('status-' + k).textContent = 'Set URL below ↓';
-      });
-      return;
-    }
-    for (const [key, row] of Object.entries(ROW_MAP)) {
-      try {
-        const val = await readRow(row);
-        setUI(key, val);
-      } catch(e) {
-        document.getElementById('status-' + key).textContent = 'Error reading';
-      }
-    }
-  }
-
-  // ── WRITE to sheet ────────────────────────────────────────
-  async function writeRow(row, value) {
-    const url = getUrl();
-    // Google redirects POST → use no-cors fetch with form data
-    await fetch(url, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `row=${row}&col=2&value=${value}`
-    });
-  }
-
-  // ── UI helpers ────────────────────────────────────────────
-  function setUI(key, val) {
-    const cb = document.getElementById('cb-' + key);
-    const card = document.getElementById('card-' + key);
-    const status = document.getElementById('status-' + key);
-    cb.checked = val;
-    card.classList.toggle('active', val);
-    status.textContent = val ? 'Active' : 'Inactive';
-  }
-
-  async function handleToggle(key, cb) {
-    const toggle = document.getElementById('toggle-' + key);
-    const row = ROW_MAP[key];
-    const newVal = cb.checked;
-
-    toggle.classList.add('loading');
-    cb.disabled = true;
-
-    try {
-      await writeRow(row, newVal);
-      setUI(key, newVal);
-      showToast(`${key} → ${newVal ? 'TRUE' : 'FALSE'}`, 'success');
-    } catch(e) {
-      cb.checked = !newVal;
-      showToast('Write failed', 'error');
-    } finally {
-      toggle.classList.remove('loading');
-      cb.disabled = false;
-    }
-  }
-
   // ── INIT ──────────────────────────────────────────────────
+  renderDropdown();
   loadAll();
 </script>
 </body>
