@@ -17,9 +17,9 @@
     }
     body {
       font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text);
-      min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: 0 0 3rem;
+      min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: 0 0 5rem;
     }
-    header { width: 100%; padding: 3rem 1.5rem 1.5rem; text-align: center; position: relative; }
+    header { width: 100%; padding: 3rem 1.5rem 1.5rem; text-align: center; }
     header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
     header p  { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); }
     .dot {
@@ -28,16 +28,7 @@
       animation: pulse 2s infinite;
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    .admin-btn {
-      position: absolute; top: 1.2rem; right: 1.2rem;
-      background: none; border: none; color: var(--muted);
-      font-size: 1.3rem; cursor: pointer; padding: 6px;
-      border-radius: 8px; transition: color 0.2s, background 0.2s; line-height: 1;
-    }
-    .admin-btn:hover { color: var(--text); background: var(--surface2); }
-    .admin-btn.active { color: var(--on); }
 
-    /* env selector */
     .env-wrap { width: 100%; max-width: 420px; padding: 0 1.25rem 1.25rem; }
     .env-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
     .env-select-wrap { position: relative; }
@@ -51,10 +42,7 @@
       font-size: 0.95rem; font-weight: 500; padding: 0.75rem 2.5rem 0.75rem 1rem;
       appearance: none; cursor: pointer; outline: none; transition: border-color 0.2s;
     }
-    select#env-select:focus { border-color: rgba(74,222,128,0.4); }
-    select#env-select option { background: #1a1a1a; }
 
-    /* cards */
     .cards { width: 100%; max-width: 420px; padding: 0 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
     .card {
       background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
@@ -64,10 +52,9 @@
     .card.active { border-color: rgba(74,222,128,0.3); }
     .card-info { flex: 1; min-width: 0; }
     .card-label { font-size: 1rem; font-weight: 500; }
-    .card-status { margin-top: 3px; font-size: 0.78rem; font-weight: 500; color: var(--muted); transition: color 0.2s; }
+    .card-status { margin-top: 3px; font-size: 0.78rem; font-weight: 500; color: var(--muted); }
     .card.active .card-status { color: var(--on); }
 
-    /* toggle */
     .toggle { position: relative; width: 52px; height: 30px; flex-shrink: 0; }
     .toggle input { display: none; }
     .track {
@@ -90,87 +77,20 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* admin panel */
-    .admin-panel { width: 100%; max-width: 420px; padding: 1.5rem 1.25rem 0; display: none; }
-    .admin-panel.open { display: block; }
-    .admin-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; }
-    .admin-header {
-      padding: 0.9rem 1.25rem; font-size: 0.78rem; font-weight: 600;
-      color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em;
-      border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;
-    }
-    .pw-gate { padding: 1.25rem; display: flex; gap: 8px; }
-    .pw-gate input {
-      flex: 1; background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem; padding: 0.55rem 0.75rem; outline: none;
-    }
-    .pw-gate input:focus { border-color: rgba(74,222,128,0.4); }
-    .pw-btn {
-      background: var(--on-bg); color: var(--on); border: 1px solid var(--on);
-      border-radius: 8px; padding: 0.55rem 1rem; font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap;
+    .version-badge {
+      position: fixed; bottom: 1.2rem; right: 1.2rem;
+      font-size: 0.68rem; color: var(--muted);
+      background: var(--surface2); padding: 4px 8px; border-radius: 6px;
+      border: 1px solid var(--border); letter-spacing: 0.05em;
     }
 
-    /* URL config row */
-    .url-row { padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border); }
-    .url-row label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .url-row input {
-      width: 100%; background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text); font-family: 'DM Sans', monospace;
-      font-size: 0.78rem; padding: 0.55rem 0.75rem; outline: none;
-    }
-    .url-row input:focus { border-color: rgba(74,222,128,0.4); }
-    .save-url-btn {
-      margin-top: 7px; background: var(--surface2); color: var(--muted);
-      border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.9rem;
-      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer;
-    }
-    .save-url-btn:hover { color: var(--text); border-color: var(--border2); }
-
-    /* env list */
-    .env-list { padding: 0.5rem 0; }
-    .env-item {
-      padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    .env-item:last-child { border-bottom: none; }
-    .env-item-info { flex: 1; min-width: 0; }
-    .env-item-name { font-size: 0.9rem; font-weight: 500; }
-    .env-item-sheet { font-size: 0.72rem; color: var(--muted); }
-    .del-btn {
-      background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--red);
-      width: 30px; height: 30px; font-size: 1rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .del-btn:hover { background: var(--red-bg); }
-    .add-env { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
-    .add-env input {
-      width: 100%; background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem; padding: 0.55rem 0.75rem; outline: none;
-    }
-    .add-env input:focus { border-color: rgba(74,222,128,0.4); }
-    .add-btn {
-      background: var(--on-bg); color: var(--on); border: 1px solid var(--on);
-      border-radius: 8px; padding: 0.6rem; font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem; font-weight: 500; cursor: pointer;
-    }
-    .logout-btn { background: none; border: none; color: var(--muted); font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
-    .logout-btn:hover { color: var(--text); }
-
-    /* toast */
     .toast {
-      position: fixed; bottom: 1.5rem; left: 50%;
-      transform: translateX(-50%) translateY(80px);
+      position: fixed; bottom: 3.5rem; left: 50%; transform: translateX(-50%) translateY(80px);
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 99px; padding: 0.6rem 1.2rem; font-size: 0.83rem; color: var(--text);
-      white-space: nowrap; transition: transform 0.3s, opacity 0.3s;
-      opacity: 0; z-index: 100; pointer-events: none;
+      transition: transform 0.3s, opacity 0.3s; opacity: 0; z-index: 100; pointer-events: none;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast.success { border-color: rgba(74,222,128,0.4); color: var(--on); }
-    .toast.error   { border-color: rgba(248,113,113,0.4); color: var(--red); }
   </style>
 </head>
 <body>
@@ -178,7 +98,6 @@
 <header>
   <h1><span class="dot"></span>Sheet Controls</h1>
   <p id="header-sub">Select an environment</p>
-  <button class="admin-btn" id="admin-btn" onclick="toggleAdmin()">⚙</button>
 </header>
 
 <div class="env-wrap">
@@ -192,20 +111,14 @@
 
 <div class="cards">
   <div class="card" id="card-IsAES">
-    <div class="card-info">
-      <div class="card-label">IsAES</div>
-      <div class="card-status" id="status-IsAES">—</div>
-    </div>
+    <div class="card-info"><div class="card-label">IsAES</div><div class="card-status" id="status-IsAES">—</div></div>
     <label class="toggle" id="toggle-IsAES">
       <input type="checkbox" id="cb-IsAES" onchange="handleToggle('IsAES', this)" />
       <div class="track"><div class="thumb"></div></div>
     </label>
   </div>
   <div class="card" id="card-IsAutoclave">
-    <div class="card-info">
-      <div class="card-label">IsAutoclave</div>
-      <div class="card-status" id="status-IsAutoclave">—</div>
-    </div>
+    <div class="card-info"><div class="card-label">IsAutoclave</div><div class="card-status" id="status-IsAutoclave">—</div></div>
     <label class="toggle" id="toggle-IsAutoclave">
       <input type="checkbox" id="cb-IsAutoclave" onchange="handleToggle('IsAutoclave', this)" />
       <div class="track"><div class="thumb"></div></div>
@@ -213,85 +126,42 @@
   </div>
 </div>
 
-<div class="admin-panel" id="admin-panel">
-  <div class="admin-card">
-    <div class="admin-header">
-      <span>Admin</span>
-      <button class="logout-btn" id="logout-btn" onclick="logout()" style="display:none">Log out</button>
-    </div>
-    <div class="pw-gate" id="pw-gate">
-      <input type="password" id="pw-input" placeholder="Admin password" onkeydown="if(event.key==='Enter')checkPw()" />
-      <button class="pw-btn" onclick="checkPw()">Unlock</button>
-    </div>
-    <div id="admin-body" style="display:none">
-      <div class="url-row">
-        <label>Apps Script URL</label>
-        <input type="text" id="api-url-input" placeholder="https://script.google.com/macros/s/.../exec" />
-        <button class="save-url-btn" onclick="saveApiUrl()">Save URL</button>
-      </div>
-      <div class="env-list" id="env-list"></div>
-      <div class="add-env">
-        <input type="text" id="new-name"  placeholder="Environment name (e.g. Production)" />
-        <input type="text" id="new-sheet" placeholder="Sheet name (e.g. Input)" />
-        <button class="add-btn" onclick="addEnv()">+ Add environment</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+<div class="version-badge">V2.1.0</div>
 <div class="toast" id="toast"></div>
 
 <script>
-  const ROW_MAP    = { IsAES: 1, IsAutoclave: 2 };
-  const LS_SEL     = 'sheet_selected';
-  const LS_URL     = 'https://script.google.com/macros/s/AKfycbzLm-vWTNQSEbErvGllYIlme7wO55814CNsYhgbGVQCCIzEGrCfl1VUBYwxMA-5hF7R3w/exec';
-  const ADMIN_PASS = 'CreasupSuperDigitalAC'; 
+  // 1. PASTE YOUR WEB APP URL HERE:
+  const API_URL = "https://script.google.com/macros/s/AKfycbzLm-vWTNQSEbErvGllYIlme7wO55814CNsYhgbGVQCCIzEGrCfl1VUBYwxMA-5hF7R3w/exec";
+  
+  const ROW_MAP = { IsAES: 1, IsAutoclave: 2 };
+  const LS_SEL  = 'sheet_selected';
+  let cachedEnvs = [];
 
-  let adminOpen = false;
-  let cachedEnvs = []; // Cache loaded dynamic list from sheet
-
-  // ── STORAGE ───────────────────────────────────────────────
   function getSelected()  { return localStorage.getItem(LS_SEL) || ''; }
   function setSelected(n) { localStorage.setItem(LS_SEL, n); }
-  function getApiUrl()    { return localStorage.getItem(LS_URL) || ''; }
-
   function getActiveSheet() {
     const env = cachedEnvs.find(e => e.name === getSelected());
     return env ? env.sheet : '';
   }
 
-  // ── API FETCH ENVS ────────────────────────────────────────
   async function fetchEnvironments() {
-    const url = getApiUrl();
-    if (!url) {
-      cachedEnvs = [];
-      renderDropdown();
-      return;
-    }
     try {
-      const res = await fetch(`${url}?action=getEnvs`);
+      const res = await fetch(`${API_URL}?action=getEnvs`);
       cachedEnvs = await res.json();
-    } catch (e) {
-      console.error("Error loading environments from sheet:", e);
-      cachedEnvs = [];
-      showToast('Failed loading environments from sheet', 'error');
-    }
-    renderDropdown();
+      renderDropdown();
+    } catch (e) { showToast('Connection Error', 'error'); }
   }
 
-  // ── DROPDOWN ──────────────────────────────────────────────
   function renderDropdown() {
-    const sel  = document.getElementById('env-select');
+    const sel = document.getElementById('env-select');
     const saved = getSelected();
     sel.innerHTML = '<option value="">— select —</option>';
-    
     cachedEnvs.forEach(e => {
       const opt = document.createElement('option');
       opt.value = e.name; opt.textContent = e.name;
       if (e.name === saved) opt.selected = true;
       sel.appendChild(opt);
     });
-    
     document.getElementById('header-sub').textContent = saved || 'Select an environment';
   }
 
@@ -302,131 +172,16 @@
     loadAll();
   }
 
-  // ── ADMIN LIST ────────────────────────────────────────────
-  function renderAdminList() {
-    const list = document.getElementById('env-list');
-    if (!cachedEnvs.length) {
-      list.innerHTML = '<p style="padding:1rem 1.25rem;font-size:0.83rem;color:var(--muted)">No environments found.</p>';
-      return;
-    }
-    list.innerHTML = cachedEnvs.map((e, i) => `
-      <div class="env-item">
-        <div class="env-item-info">
-          <div class="env-item-name">${esc(e.name)}</div>
-          <div class="env-item-sheet">Sheet: ${esc(e.sheet)}</div>
-        </div>
-        <button class="del-btn" onclick="deleteEnv(${i})">✕</button>
-      </div>`).join('');
-  }
-
-  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  async function addEnv() {
-    const name  = document.getElementById('new-name').value.trim();
-    const sheet = document.getElementById('new-sheet').value.trim();
-    const url = getApiUrl();
-    
-    if (!url) { showToast('Set API URL first', 'error'); return; }
-    if (!name || !sheet) { showToast('Fill in name and sheet', 'error'); return; }
-    if (cachedEnvs.find(e => e.name === name)) { showToast('Name already exists', 'error'); return; }
-    
-    showToast('Adding...', 'info');
-    try {
-      await fetch(url, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `action=addEnv&name=${encodeURIComponent(name)}&sheet=${encodeURIComponent(sheet)}`
-      });
-      document.getElementById('new-name').value  = '';
-      document.getElementById('new-sheet').value = '';
-      
-      // Reload environments from backend to mirror configuration update
-      setTimeout(async () => {
-        await fetchEnvironments();
-        renderAdminList();
-        showToast(`"${name}" added to sheet`, 'success');
-      }, 800);
-    } catch {
-      showToast('Failed to add environment', 'error');
-    }
-  }
-
-  async function deleteEnv(i) {
-    const url = getApiUrl();
-    if (!url) return;
-    const removedName = cachedEnvs[i].name;
-    
-    showToast('Deleting...', 'info');
-    try {
-      await fetch(url, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `action=deleteEnv&index=${i}`
-      });
-      
-      if (getSelected() === removedName) setSelected('');
-      
-      setTimeout(async () => {
-        await fetchEnvironments();
-        renderAdminList();
-        showToast(`"${removedName}" removed from sheet`, 'success');
-      }, 800);
-    } catch {
-      showToast('Failed to delete environment', 'error');
-    }
-  }
-
-  function saveApiUrl() {
-    const v = document.getElementById('api-url-input').value.trim();
-    localStorage.setItem(LS_URL, v);
-    showToast('URL saved', 'success');
-    initializeData();
-  }
-
-  // ── ADMIN GATE ────────────────────────────────────────────
-  function toggleAdmin() {
-    adminOpen = !adminOpen;
-    document.getElementById('admin-panel').classList.toggle('open', adminOpen);
-    document.getElementById('admin-btn').classList.toggle('active', adminOpen);
-    if (!adminOpen) { showAdminBody(false); }
-  }
-
-  function checkPw() {
-    if (document.getElementById('pw-input').value === ADMIN_PASS) {
-      showAdminBody(true);
-      document.getElementById('pw-input').value = '';
-    } else {
-      showToast('Wrong password', 'error');
-      document.getElementById('pw-input').value = '';
-    }
-  }
-
-  function showAdminBody(show) {
-    document.getElementById('pw-gate').style.display    = show ? 'none'   : 'flex';
-    document.getElementById('admin-body').style.display = show ? 'block'  : 'none';
-    document.getElementById('logout-btn').style.display = show ? 'inline' : 'none';
-    if (show) {
-      document.getElementById('api-url-input').value = getApiUrl();
-      renderAdminList();
-    }
-  }
-
-  function logout() { showAdminBody(false); }
-
-  // ── SHEET READ / WRITE ────────────────────────────────────
   async function readRow(row) {
-    const url   = getApiUrl();
     const sheet = getActiveSheet();
-    if (!url || !sheet) return null;
-    const res  = await fetch(`${url}?sheet=${encodeURIComponent(sheet)}&row=${row}&col=2`);
-    const text = (await res.text()).trim().toUpperCase();
-    return text === 'TRUE';
+    if (!sheet) return null;
+    const res = await fetch(`${API_URL}?sheet=${encodeURIComponent(sheet)}&row=${row}&col=2`);
+    return (await res.text()).trim().toUpperCase() === 'TRUE';
   }
 
   async function writeRow(row, value) {
-    const url   = getApiUrl();
     const sheet = getActiveSheet();
-    await fetch(url, {
+    await fetch(API_URL, {
       method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: `sheet=${encodeURIComponent(sheet)}&row=${row}&col=2&value=${value}`
@@ -434,23 +189,16 @@
   }
 
   async function loadAll() {
-    if (!getApiUrl() || !getActiveSheet()) {
-      ['IsAES','IsAutoclave'].forEach(k => {
-        document.getElementById('status-' + k).textContent = getApiUrl() ? 'Select environment ↑' : 'Set URL in admin ⚙';
-        document.getElementById('card-' + k).classList.remove('active');
-      });
-      return;
-    }
+    if (!getActiveSheet()) return;
     for (const [key, row] of Object.entries(ROW_MAP)) {
-      document.getElementById('status-' + key).textContent = 'Loading…';
-      try { setUI(key, await readRow(row)); }
-      catch { document.getElementById('status-' + key).textContent = 'Error'; }
+      document.getElementById('status-' + key).textContent = '...';
+      try { setUI(key, await readRow(row)); } catch { }
     }
   }
 
   function setUI(key, val) {
-    document.getElementById('cb-'     + key).checked = val;
-    document.getElementById('card-'   + key).classList.toggle('active', val);
+    document.getElementById('cb-' + key).checked = val;
+    document.getElementById('card-' + key).classList.toggle('active', val);
     document.getElementById('status-' + key).textContent = val ? 'Active' : 'Inactive';
   }
 
@@ -461,29 +209,17 @@
     try {
       await writeRow(ROW_MAP[key], newVal);
       setUI(key, newVal);
-      showToast(`${key} → ${newVal ? 'TRUE' : 'FALSE'}`, 'success');
-    } catch {
-      cb.checked = !newVal;
-      showToast('Write failed', 'error');
-    } finally { toggle.classList.remove('loading'); cb.disabled = false; }
+    } catch { cb.checked = !newVal; } 
+    finally { toggle.classList.remove('loading'); cb.disabled = false; }
   }
 
-  // ── TOAST ─────────────────────────────────────────────────
-  let toastTimer;
-  function showToast(msg, type = '') {
+  function showToast(msg) {
     const el = document.getElementById('toast');
-    el.textContent = msg; el.className = 'toast show ' + type;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { el.className = 'toast'; }, 2200);
+    el.textContent = msg; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2000);
   }
 
-  // ── INITIALIZATION RUNNER ─────────────────────────────────
-  async function initializeData() {
-    await fetchEnvironments();
-    await loadAll();
-  }
-
-  initializeData();
+  fetchEnvironments().then(() => loadAll());
 </script>
 </body>
 </html>
