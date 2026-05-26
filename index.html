@@ -1,36 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sheet Controls</title>
+  <title>Contrôle du scénario</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0f0f0f; --surface: #1a1a1a; --surface2: #242424;
-      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
-      --text: #f0f0f0; --muted: #888;
-      --on: #4ade80; --on-bg: rgba(74,222,128,0.12);
-      --red: #f87171; --red-bg: rgba(248,113,113,0.12);
+      --bg: #f4f7fc; --surface: #ffffff; --surface2: #eef2f9;
+      --border: rgba(0, 40, 120, 0.08); --border2: rgba(0, 40, 120, 0.15);
+      --text: #1e293b; --muted: #64748b;
+      --primary: #2563eb; --primary-light: #dbeafe;
+      --on: #10b981; --on-bg: #d1fae5;
+      --warning: #b45309; --warning-bg: #fef3c7; --warning-border: #fde68a;
     }
     body {
       font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text);
       min-height: 100dvh; display: flex; flex-direction: column; align-items: center; padding: 0 0 5rem;
     }
-    header { width: 100%; padding: 3rem 1.5rem 1.5rem; text-align: center; }
-    header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
-    header p  { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); }
+    header { width: 100%; max-width: 420px; padding: 3rem 1.25rem 1rem; text-align: left; }
+    header h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+    header p  { margin-top: 0.4rem; font-size: 0.9rem; color: var(--muted); display: flex; align-items: center; }
+    
     .dot {
-      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-      background: var(--on); margin-right: 6px; vertical-align: middle;
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--primary); margin-right: 8px;
       animation: pulse 2s infinite;
     }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-    .env-wrap { width: 100%; max-width: 420px; padding: 0 1.25rem 1.25rem; }
-    .env-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .warning-box {
+      width: calc(100% - 2.5rem); max-width: 380px; background: var(--warning-bg);
+      border: 1px solid var(--warning-border); border-radius: 12px;
+      padding: 0.85rem 1.1rem; margin: 0.5rem 1.25rem 1.5rem; font-size: 0.85rem;
+      line-height: 1.4; color: var(--warning); font-weight: 500;
+    }
+
+    .env-wrap { width: 100%; max-width: 420px; padding: 0 1.25rem 1.5rem; }
+    .env-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; font-weight: 600; }
     .env-select-wrap { position: relative; }
     .env-select-wrap::after {
       content: '▾'; position: absolute; right: 14px; top: 50%;
@@ -40,54 +49,58 @@
       width: 100%; background: var(--surface); border: 1px solid var(--border2);
       border-radius: 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
       font-size: 0.95rem; font-weight: 500; padding: 0.75rem 2.5rem 0.75rem 1rem;
-      appearance: none; cursor: pointer; outline: none; transition: border-color 0.2s;
+      appearance: none; cursor: pointer; outline: none; transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
+    select#env-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
 
-    .cards { width: 100%; max-width: 420px; padding: 0 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .cards { width: 100%; max-width: 420px; padding: 0 1.25rem; display: flex; flex-direction: column; gap: 0.85rem; }
     .card {
       background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
       padding: 1.25rem 1.5rem; display: flex; align-items: center;
-      justify-content: space-between; gap: 1rem; transition: border-color 0.2s;
+      justify-content: space-between; gap: 1rem; transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01);
     }
-    .card.active { border-color: rgba(74,222,128,0.3); }
+    .card.active { border-color: rgba(37, 99, 235, 0.25); background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
     .card-info { flex: 1; min-width: 0; }
-    .card-label { font-size: 1rem; font-weight: 500; }
-    .card-status { margin-top: 3px; font-size: 0.78rem; font-weight: 500; color: var(--muted); }
-    .card.active .card-status { color: var(--on); }
+    .card-label { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+    .card-status { margin-top: 3px; font-size: 0.8rem; font-weight: 500; color: var(--muted); }
+    .card.active .card-status { color: var(--primary); }
 
     .toggle { position: relative; width: 52px; height: 30px; flex-shrink: 0; }
     .toggle input { display: none; }
     .track {
       position: absolute; inset: 0; border-radius: 999px;
-      background: var(--surface2); border: 1px solid var(--border);
+      background: var(--surface2); border: 1px solid var(--border2);
       cursor: pointer; transition: background 0.25s, border-color 0.25s;
     }
     .thumb {
       position: absolute; top: 4px; left: 4px; width: 20px; height: 20px;
-      border-radius: 50%; background: var(--muted);
+      border-radius: 50%; background: #94a3b8;
       transition: transform 0.25s, background 0.25s; pointer-events: none;
     }
-    .toggle input:checked ~ .track { background: var(--on-bg); border-color: var(--on); }
-    .toggle input:checked ~ .track .thumb { transform: translateX(22px); background: var(--on); }
+    .toggle input:checked ~ .track { background: var(--primary-light); border-color: var(--primary); }
+    .toggle input:checked ~ .track .thumb { transform: translateX(22px); background: var(--primary); }
     .toggle.loading .track { opacity: 0.5; pointer-events: none; }
     .toggle.loading .thumb::after {
       content: ''; position: absolute; inset: 2px; border-radius: 50%;
-      border: 2px solid transparent; border-top-color: var(--text);
+      border: 2px solid transparent; border-top-color: var(--primary);
       animation: spin 0.6s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .version-badge {
       position: fixed; bottom: 1.2rem; right: 1.2rem;
-      font-size: 0.68rem; color: var(--muted);
-      background: var(--surface2); padding: 4px 8px; border-radius: 6px;
-      border: 1px solid var(--border); letter-spacing: 0.05em;
+      font-size: 0.7rem; color: var(--muted); font-weight: 500;
+      background: var(--surface); padding: 4px 10px; border-radius: 20px;
+      border: 1px solid var(--border2); letter-spacing: 0.02em;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
     }
 
     .toast {
       position: fixed; bottom: 3.5rem; left: 50%; transform: translateX(-50%) translateY(80px);
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 99px; padding: 0.6rem 1.2rem; font-size: 0.83rem; color: var(--text);
+      background: var(--text); border-radius: 99px; padding: 0.6rem 1.4rem; 
+      font-size: 0.85rem; color: #ffffff; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
       transition: transform 0.3s, opacity 0.3s; opacity: 0; z-index: 100; pointer-events: none;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -96,29 +109,34 @@
 <body>
 
 <header>
-  <h1><span class="dot"></span>Sheet Controls</h1>
-  <p id="header-sub">Select an environment</p>
+  <h1>Contrôle du scénario</h1>
+  <p id="header-sub"><span class="dot"></span>Chargement de l'environnement...</p>
 </header>
 
+<div class="warning-box">
+  ⚠️ <strong>Attention :</strong> Veuillez configurer et valider la valeur <strong>AES</strong> ci-dessous avant de lancer la simulation Unity.
+</div>
+
 <div class="env-wrap">
-  <div class="env-label">Environment</div>
+  <div class="env-label">Environnement courant</div>
   <div class="env-select-wrap">
     <select id="env-select" onchange="onEnvChange()">
-      <option value="">— loading —</option>
+      <option value="">— Chargement —</option>
     </select>
   </div>
 </div>
 
 <div class="cards">
   <div class="card" id="card-IsAES">
-    <div class="card-info"><div class="card-label">IsAES</div><div class="card-status" id="status-IsAES">—</div></div>
+    <div class="card-info"><div class="card-label">AES</div><div class="card-status" id="status-IsAES">—</div></div>
     <label class="toggle" id="toggle-IsAES">
       <input type="checkbox" id="cb-IsAES" onchange="handleToggle('IsAES', this)" />
       <div class="track"><div class="thumb"></div></div>
     </label>
   </div>
+  
   <div class="card" id="card-IsAutoclave">
-    <div class="card-info"><div class="card-label">IsAutoclave</div><div class="card-status" id="status-IsAutoclave">—</div></div>
+    <div class="card-info"><div class="card-label">Autoclave</div><div class="card-status" id="status-IsAutoclave">—</div></div>
     <label class="toggle" id="toggle-IsAutoclave">
       <input type="checkbox" id="cb-IsAutoclave" onchange="handleToggle('IsAutoclave', this)" />
       <div class="track"><div class="thumb"></div></div>
@@ -126,7 +144,7 @@
   </div>
 </div>
 
-<div class="version-badge">V2.1.0</div>
+<div class="version-badge">V2.2.0</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -149,26 +167,35 @@
       const res = await fetch(`${API_URL}?action=getEnvs`);
       cachedEnvs = await res.json();
       renderDropdown();
-    } catch (e) { showToast('Connection Error', 'error'); }
+    } catch (e) { showToast('Erreur de connexion'); }
   }
 
   function renderDropdown() {
     const sel = document.getElementById('env-select');
     const saved = getSelected();
-    sel.innerHTML = '<option value="">— select —</option>';
+    sel.innerHTML = '<option value="">— Sélectionner —</option>';
     cachedEnvs.forEach(e => {
       const opt = document.createElement('option');
       opt.value = e.name; opt.textContent = e.name;
       if (e.name === saved) opt.selected = true;
       sel.appendChild(opt);
     });
-    document.getElementById('header-sub').textContent = saved || 'Select an environment';
+    updateHeaderStatus(saved);
+  }
+
+  function updateHeaderStatus(envName) {
+    const sub = document.getElementById('header-sub');
+    if(envName) {
+      sub.innerHTML = `<span class="dot"></span>Environnement : <strong>${envName}</strong>`;
+    } else {
+      sub.innerHTML = `<span class="dot" style="background:#64748b;animation:none;"></span>Aucun environnement sélectionné`;
+    }
   }
 
   function onEnvChange() {
     const name = document.getElementById('env-select').value;
     setSelected(name);
-    document.getElementById('header-sub').textContent = name || 'Select an environment';
+    updateHeaderStatus(name);
     loadAll();
   }
 
@@ -191,7 +218,7 @@
   async function loadAll() {
     if (!getActiveSheet()) return;
     for (const [key, row] of Object.entries(ROW_MAP)) {
-      document.getElementById('status-' + key).textContent = '...';
+      document.getElementById('status-' + key).textContent = 'Mise à jour...';
       try { setUI(key, await readRow(row)); } catch { }
     }
   }
@@ -199,7 +226,7 @@
   function setUI(key, val) {
     document.getElementById('cb-' + key).checked = val;
     document.getElementById('card-' + key).classList.toggle('active', val);
-    document.getElementById('status-' + key).textContent = val ? 'Active' : 'Inactive';
+    document.getElementById('status-' + key).textContent = val ? 'Actif' : 'Inactif';
   }
 
   async function handleToggle(key, cb) {
@@ -209,7 +236,8 @@
     try {
       await writeRow(ROW_MAP[key], newVal);
       setUI(key, newVal);
-    } catch { cb.checked = !newVal; } 
+      showToast('Configuration enregistrée');
+    } catch { cb.checked = !newVal; showToast('Erreur d\'enregistrement'); } 
     finally { toggle.classList.remove('loading'); cb.disabled = false; }
   }
 
