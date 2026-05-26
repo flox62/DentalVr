@@ -185,7 +185,7 @@
   <div class="env-label">Environment</div>
   <div class="env-select-wrap">
     <select id="env-select" onchange="onEnvChange()">
-      <option value="">— select —</option>
+      <option value="">— loading —</option>
     </select>
   </div>
 </div>
@@ -224,13 +224,11 @@
       <button class="pw-btn" onclick="checkPw()">Unlock</button>
     </div>
     <div id="admin-body" style="display:none">
-      <!-- Apps Script URL -->
       <div class="url-row">
         <label>Apps Script URL</label>
         <input type="text" id="api-url-input" placeholder="https://script.google.com/macros/s/.../exec" />
         <button class="save-url-btn" onclick="saveApiUrl()">Save URL</button>
       </div>
-      <!-- Environments -->
       <div class="env-list" id="env-list"></div>
       <div class="add-env">
         <input type="text" id="new-name"  placeholder="Environment name (e.g. Production)" />
@@ -245,37 +243,55 @@
 
 <script>
   const ROW_MAP    = { IsAES: 1, IsAutoclave: 2 };
-  const LS_ENVS    = 'sheet_envs';
   const LS_SEL     = 'sheet_selected';
   const LS_URL     = 'apps_script_url';
-  const ADMIN_PASS = 'CreasupSuperDigitalAC'; // ← change this
+  const ADMIN_PASS = 'CreasupSuperDigitalAC'; 
 
   let adminOpen = false;
+  let cachedEnvs = []; // Cache loaded dynamic list from sheet
 
   // ── STORAGE ───────────────────────────────────────────────
-  function getEnvs()      { try { return JSON.parse(localStorage.getItem(LS_ENVS)) || []; } catch { return []; } }
-  function saveEnvs(e)    { localStorage.setItem(LS_ENVS, JSON.stringify(e)); }
   function getSelected()  { return localStorage.getItem(LS_SEL) || ''; }
   function setSelected(n) { localStorage.setItem(LS_SEL, n); }
   function getApiUrl()    { return localStorage.getItem(LS_URL) || ''; }
 
   function getActiveSheet() {
-    const env = getEnvs().find(e => e.name === getSelected());
+    const env = cachedEnvs.find(e => e.name === getSelected());
     return env ? env.sheet : '';
+  }
+
+  // ── API FETCH ENVS ────────────────────────────────────────
+  async function fetchEnvironments() {
+    const url = getApiUrl();
+    if (!url) {
+      cachedEnvs = [];
+      renderDropdown();
+      return;
+    }
+    try {
+      const res = await fetch(`${url}?action=getEnvs`);
+      cachedEnvs = await res.json();
+    } catch (e) {
+      console.error("Error loading environments from sheet:", e);
+      cachedEnvs = [];
+      showToast('Failed loading environments from sheet', 'error');
+    }
+    renderDropdown();
   }
 
   // ── DROPDOWN ──────────────────────────────────────────────
   function renderDropdown() {
     const sel  = document.getElementById('env-select');
-    const envs = getEnvs();
     const saved = getSelected();
     sel.innerHTML = '<option value="">— select —</option>';
-    envs.forEach(e => {
+    
+    cachedEnvs.forEach(e => {
       const opt = document.createElement('option');
       opt.value = e.name; opt.textContent = e.name;
       if (e.name === saved) opt.selected = true;
       sel.appendChild(opt);
     });
+    
     document.getElementById('header-sub').textContent = saved || 'Select an environment';
   }
 
@@ -289,12 +305,11 @@
   // ── ADMIN LIST ────────────────────────────────────────────
   function renderAdminList() {
     const list = document.getElementById('env-list');
-    const envs = getEnvs();
-    if (!envs.length) {
-      list.innerHTML = '<p style="padding:1rem 1.25rem;font-size:0.83rem;color:var(--muted)">No environments yet.</p>';
+    if (!cachedEnvs.length) {
+      list.innerHTML = '<p style="padding:1rem 1.25rem;font-size:0.83rem;color:var(--muted)">No environments found.</p>';
       return;
     }
-    list.innerHTML = envs.map((e, i) => `
+    list.innerHTML = cachedEnvs.map((e, i) => `
       <div class="env-item">
         <div class="env-item-info">
           <div class="env-item-name">${esc(e.name)}</div>
@@ -306,34 +321,66 @@
 
   function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  function addEnv() {
+  async function addEnv() {
     const name  = document.getElementById('new-name').value.trim();
     const sheet = document.getElementById('new-sheet').value.trim();
+    const url = getApiUrl();
+    
+    if (!url) { showToast('Set API URL first', 'error'); return; }
     if (!name || !sheet) { showToast('Fill in name and sheet', 'error'); return; }
-    const envs = getEnvs();
-    if (envs.find(e => e.name === name)) { showToast('Name already exists', 'error'); return; }
-    envs.push({ name, sheet });
-    saveEnvs(envs);
-    document.getElementById('new-name').value  = '';
-    document.getElementById('new-sheet').value = '';
-    renderDropdown(); renderAdminList();
-    showToast(`"${name}" added`, 'success');
+    if (cachedEnvs.find(e => e.name === name)) { showToast('Name already exists', 'error'); return; }
+    
+    showToast('Adding...', 'info');
+    try {
+      await fetch(url, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `action=addEnv&name=${encodeURIComponent(name)}&sheet=${encodeURIComponent(sheet)}`
+      });
+      document.getElementById('new-name').value  = '';
+      document.getElementById('new-sheet').value = '';
+      
+      // Reload environments from backend to mirror configuration update
+      setTimeout(async () => {
+        await fetchEnvironments();
+        renderAdminList();
+        showToast(`"${name}" added to sheet`, 'success');
+      }, 800);
+    } catch {
+      showToast('Failed to add environment', 'error');
+    }
   }
 
-  function deleteEnv(i) {
-    const envs = getEnvs();
-    const removed = envs.splice(i, 1)[0];
-    saveEnvs(envs);
-    if (getSelected() === removed.name) setSelected('');
-    renderDropdown(); renderAdminList();
-    showToast(`"${removed.name}" removed`, 'success');
+  async function deleteEnv(i) {
+    const url = getApiUrl();
+    if (!url) return;
+    const removedName = cachedEnvs[i].name;
+    
+    showToast('Deleting...', 'info');
+    try {
+      await fetch(url, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `action=deleteEnv&index=${i}`
+      });
+      
+      if (getSelected() === removedName) setSelected('');
+      
+      setTimeout(async () => {
+        await fetchEnvironments();
+        renderAdminList();
+        showToast(`"${removedName}" removed from sheet`, 'success');
+      }, 800);
+    } catch {
+      showToast('Failed to delete environment', 'error');
+    }
   }
 
   function saveApiUrl() {
     const v = document.getElementById('api-url-input').value.trim();
     localStorage.setItem(LS_URL, v);
     showToast('URL saved', 'success');
-    loadAll();
+    initializeData();
   }
 
   // ── ADMIN GATE ────────────────────────────────────────────
@@ -430,8 +477,13 @@
     toastTimer = setTimeout(() => { el.className = 'toast'; }, 2200);
   }
 
-  renderDropdown();
-  loadAll();
+  // ── INITIALIZATION RUNNER ─────────────────────────────────
+  async function initializeData() {
+    await fetchEnvironments();
+    await loadAll();
+  }
+
+  initializeData();
 </script>
 </body>
 </html>
