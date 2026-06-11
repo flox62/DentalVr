@@ -82,12 +82,26 @@
     .toggle input:checked ~ .track { background: var(--primary-light); border-color: var(--primary); }
     .toggle input:checked ~ .track .thumb { transform: translateX(22px); background: var(--primary); }
     .toggle.loading .track { opacity: 0.5; pointer-events: none; }
-    .toggle.loading .thumb::after {
-      content: ''; position: absolute; inset: 2px; border-radius: 50%;
-      border: 2px solid transparent; border-top-color: var(--primary);
-      animation: spin 0.6s linear infinite;
+    
+    /* Action Button Styling */
+    .btn-action {
+      width: 100%; max-width: 420px; margin-top: 0.5rem; background: var(--primary);
+      color: #ffffff; border: none; border-radius: 14px; padding: 0.9rem;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; align-items: center;
+      justify-content: center; gap: 0.5rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    }
+    .btn-action:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-action:active { transform: translateY(0); }
+    .btn-action:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; transform: none; }
+
+    /* Spinner Animation */
+    .spinner {
+      display: none; width: 18px; height: 18px; border: 2px solid transparent;
+      border-top-color: #ffffff; border-radius: 50%; animation: spin 0.6s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-action.loading .spinner { display: inline-block; }
 
     .version-badge {
       position: fixed; bottom: 1.2rem; right: 1.2rem;
@@ -114,11 +128,11 @@
 </header>
 
 <div class="warning-box">
-  ⚠️ <strong>Attention :</strong> Veuillez configurer et valider la valeur <strong>AES</strong> ci-dessous avant de lancer la simulation.
+  ⚠️ <strong>Attention :</strong> Veuillez configurer et valider la valeur <strong>AES</strong> ci-dessous avant de lancer la simulation Unity.
 </div>
 
 <div class="env-wrap">
-  <div class="env-label">Environnement selectionner</div>
+  <div class="env-label">Environnement courant</div>
   <div class="env-select-wrap">
     <select id="env-select" onchange="onEnvChange()">
       <option value="">— Chargement —</option>
@@ -142,16 +156,22 @@
       <div class="track"><div class="thumb"></div></div>
     </label>
   </div>
+
+  <button class="btn-action" id="btn-menu" onclick="triggerMenuReturn()">
+    <span class="spinner"></span>
+    Retour au menu
+  </button>
 </div>
 
-<div class="version-badge">V2.2.0</div>
+<div class="version-badge">V2.3.0</div>
 <div class="toast" id="toast"></div>
 
 <script>
   // 1. PASTE YOUR WEB APP URL HERE:
-  const API_URL = "https://script.google.com/macros/s/AKfycbzLm-vWTNQSEbErvGllYIlme7wO55814CNsYhgbGVQCCIzEGrCfl1VUBYwxMA-5hF7R3w/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbz_REPLACE_WITH_YOUR_ACTUAL_ID/exec";
   
   const ROW_MAP = { IsAES: 1, IsAutoclave: 2 };
+  const MENU_ROW = 3; // Row 3
   const LS_SEL  = 'sheet_selected';
   let cachedEnvs = [];
 
@@ -239,6 +259,27 @@
       showToast('Configuration enregistrée');
     } catch { cb.checked = !newVal; showToast('Erreur d\'enregistrement'); } 
     finally { toggle.classList.remove('loading'); cb.disabled = false; }
+  }
+
+  // Logic for the new action button
+  async function triggerMenuReturn() {
+    if (!getActiveSheet()) {
+      showToast('Sélectionnez un environnement d\'abord');
+      return;
+    }
+    const btn = document.getElementById('btn-menu');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    try {
+      await writeRow(MENU_ROW, true); // Write TRUE to row 3, col 2
+      showToast('Retour menu envoyé !');
+    } catch (e) {
+      showToast('Erreur de communication');
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
   }
 
   function showToast(msg) {
